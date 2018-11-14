@@ -15,9 +15,9 @@ require 'strscan'
 
 INPUT_FILE = 'sys_config.txt'.freeze
 
-# Parses input into the specific matrices
+# Parses input
 class Parser
-  attr_reader :input, :scanner, :allocation, :max
+  attr_reader :input, :scanner, :allocation, :max, :available
 
   def initialize(input = INPUT_FILE)
     # Read the input file all at once
@@ -32,13 +32,16 @@ class Parser
   # Actually parse the input
   def parse!
     @allocation = parse_process_list('Allocation', 'available')
-    @max = parse_process_list('Max', 'maximum')
+    @max        = parse_process_list('Max', 'maximum')
+    @available  = parse_list('Available')
   end
 
   # Parses input like
   #
   # title
   # Process n: a b c ...
+  #
+  # Where (n, a, b, c, ...) are integers
   #
   # Returns a hash like
   #  { :pid => n, :item => [a, b, c, ...] }
@@ -60,5 +63,21 @@ class Parser
         item.to_sym => process[item].split(/\s+/).map(&:to_i)
       }
     end
+  end
+
+  # Parses input like
+  #
+  # title
+  # a, b, c, d, ...
+  #
+  # Where (a, b, c, ...) are integers
+  #
+  # Returns a list like
+  #   [a, b, c, d, ...]
+  #
+  def parse_list(title)
+    @scanner.skip(/#{title}\n/)
+
+    data = @scanner.scan(/\d( \d)*/).split.map(&:to_i)
   end
 end

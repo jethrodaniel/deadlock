@@ -50,6 +50,11 @@ describe Parser do
         parser.parse!
         expect(parser.max).to eq(max)
       end
-    end # context
-  end # describe
-end
+
+      it 'correctly parses the available vector' do
+        parser.parse!
+        expect(parser.available).to eq(available)
+      end
+    end # context 'parsing'
+  end # describe '.parse!'
+end # describe Parser
