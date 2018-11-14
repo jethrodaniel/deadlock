@@ -5,3 +5,11 @@ Metrics/MethodLength:
 Metrics/BlockLength:
   Exclude:
     - "**/*.rb"
+
+Style/CommentedKeyword:
+  Exclude:
+    - "**/*.rb"
+
+Style/MultilineBlockChain:
+  Exclude:
+    - "**/*.rb"

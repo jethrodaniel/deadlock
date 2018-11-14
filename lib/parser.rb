@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 # An input file looks like
 #
 # Allocation
@@ -49,20 +47,21 @@ class Parser
   def parse_process_list(title, item)
     @scanner.skip(/#{title}\n/)
 
-    data = scanner.scan(/(Process \d: \d( \d)*\n)*/)
-                  .split(/\n/)
-                  .map do |process|
-                    process.match(
-                      /Process (?<pid>\d):\s?(?<#{item}>\d( \d)*)/
-                    ).named_captures
-                  end
-
-    data.map! do |process|
-      {
-        :pid => process['pid'].to_i,
-        item.to_sym => process[item].split(/\s+/).map(&:to_i)
-      }
-    end
+    @scanner.scan(/(Process \d: \d( \d)*\n)*/)
+            .split(/\n/)
+            .map do |process|
+              process.match(
+                /Process (?<pid>\d):\s?(?<#{item}>\d( \d)*)/
+              ).named_captures
+            end
+            .tap do |hash|
+              hash.map! do |process|
+                {
+                  :pid => process['pid'].to_i,
+                  item.to_sym => process[item].split(/\s+/).map(&:to_i)
+                }
+              end
+            end
   end
 
   # Parses input like
@@ -78,6 +77,6 @@ class Parser
   def parse_list(title)
     @scanner.skip(/#{title}\n/)
 
-    data = @scanner.scan(/\d( \d)*/).split.map(&:to_i)
+    @scanner.scan(/\d( \d)*/).split.map(&:to_i)
   end
 end
