@@ -17,7 +17,7 @@ INPUT_FILE = 'sys_config.txt'.freeze
 
 # Parses input into the specific matrices
 class Parser
-  attr_reader :input, :scanner, :allocation
+  attr_reader :input, :scanner, :allocation, :max
 
   def initialize(input = INPUT_FILE)
     # Read the input file all at once
@@ -31,13 +31,9 @@ class Parser
 
   # Actually parse the input
   def parse!
-    parse_allocation
-  end
-
-  def parse_allocation
     @allocation = parse_process_list('Allocation', 'available')
+    @max = parse_process_list('Max', 'maximum')
   end
-
 
   # Parses input like
   #
@@ -60,10 +56,9 @@ class Parser
 
     data.map! do |process|
       {
-        pid: process['pid'].to_i,
-        available: process[item].split(/\s+/).map(&:to_i)
+        :pid => process['pid'].to_i,
+        item.to_sym => process[item].split(/\s+/).map(&:to_i)
       }
     end
   end
-
 end
