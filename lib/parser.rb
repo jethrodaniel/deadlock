@@ -29,26 +29,41 @@ class Parser
     @scanner = StringScanner.new input
   end
 
+  # Actually parse the input
   def parse!
     parse_allocation
   end
 
   def parse_allocation
-    @scanner.skip(/Allocation\n/)
+    @allocation = parse_process_list('Allocation', 'available')
+  end
 
-    @allocation = scanner.scan(/(Process \d: \d( \d)*\n)*/)
-                         .split(/\n/)
-                         .map do |process|
-                           process.match(
-                             /Process (?<pid>\d):\s?(?<available>\d( \d)*)/
-                           ).named_captures
-                         end
 
-    @allocation.map! do |process|
+  # Parses input like
+  #
+  # title
+  # Process n: a b c ...
+  #
+  # Returns a hash like
+  #  { :pid => n, :item => [a, b, c, ...] }
+  #
+  def parse_process_list(title, item)
+    @scanner.skip(/#{title}\n/)
+
+    data = scanner.scan(/(Process \d: \d( \d)*\n)*/)
+                  .split(/\n/)
+                  .map do |process|
+                    process.match(
+                      /Process (?<pid>\d):\s?(?<#{item}>\d( \d)*)/
+                    ).named_captures
+                  end
+
+    data.map! do |process|
       {
         pid: process['pid'].to_i,
-        available: process['available'].split(/\s+/).map(&:to_i)
+        available: process[item].split(/\s+/).map(&:to_i)
       }
     end
   end
+
 end
