@@ -40,7 +40,7 @@ class Parser
                          .split(/\n/)
                          .map do |process|
                            process.match(
-                             /Process (?<pid>\d):\s?(?<available>(\d )*)/
+                             /Process (?<pid>\d):\s?(?<available>\d( \d)*)/
                            ).named_captures
                          end
 

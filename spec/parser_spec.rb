@@ -1,15 +1,15 @@
 require 'parser'
 
 describe Parser do
-  let(:parser) { Parser.new 'sys_config.txt' }
+  let(:parser) { Parser.new 'spec/fixtures/sys_config.txt' }
 
   let(:allocation) do
     [
-      { available: [0, 1], pid: 0 },
-      { available: [2, 0], pid: 1 },
-      { available: [3, 0], pid: 2 },
-      { available: [2, 1], pid: 3 },
-      { available: [0, 0], pid: 4 }
+      { pid: 0, available: [0, 1, 0, 1, 2, 3] },
+      { pid: 1, available: [2, 0, 0, 1, 2, 3] },
+      { pid: 2, available: [3, 0, 2, 1, 2, 3] },
+      { pid: 3, available: [2, 1, 1, 1, 2, 3] },
+      { pid: 4, available: [0, 0, 2, 1, 2, 3] }
     ]
   end
 

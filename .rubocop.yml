@@ -1,0 +1,7 @@
+Metrics/MethodLength:
+  Exclude:
+    - "**/*.rb"
+
+Metrics/BlockLength:
+  Exclude:
+    - "**/*.rb"
