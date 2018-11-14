@@ -23,6 +23,8 @@ describe Parser do
     ]
   end
 
+  let(:available) { [3, 3, 2, 1, 2, 3] }
+
   describe '.new' do
     it 'creates a new Parser with input' do
       expect(parser).to_not be_nil
@@ -32,22 +34,22 @@ describe Parser do
   describe '.parse!' do
     it 'parses the input' do
       expect(parser.allocation).to be_nil
+      expect(parser.max).to be_nil
       parser.parse!
-      expect(parser.allocation).to eq(allocation)
+      expect(parser.allocation).to_not be_nil
+      expect(parser.max).to_not be_nil
     end
-  end
 
-  describe '.parse_allocation' do
-    it 'correctly parses the allocation matrix' do
-      parser.parse!
-      expect(parser.allocation).to eq(allocation)
-    end
-  end
+    context 'parsing' do
+      it 'correctly parses the allocation matrix' do
+        parser.parse!
+        expect(parser.allocation).to eq(allocation)
+      end
 
-  describe '.parse_max' do
-    it 'correctly parses the max matrix' do
-      parser.parse!
-      expect(parser.max).to eq(max)
-    end
-  end
+      it 'correctly parses the max matrix' do
+        parser.parse!
+        expect(parser.max).to eq(max)
+      end
+    end # context
+  end # describe
 end
