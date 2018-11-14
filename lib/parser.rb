@@ -15,8 +15,9 @@ require 'strscan'
 
 INPUT_FILE = 'sys_config.txt'.freeze
 
+# Parses input into the specific matrices
 class Parser
-  attr_accessor :input, :scanner
+  attr_reader :input, :scanner, :allocation
 
   def initialize(input = INPUT_FILE)
     # Read the input file all at once
@@ -28,21 +29,26 @@ class Parser
     @scanner = StringScanner.new input
   end
 
-  def parse
+  def parse!
+    parse_allocation
+  end
+
+  def parse_allocation
     @scanner.skip(/Allocation\n/)
 
-    allocation = scanner.scan(/(Process \d: \d( \d)*\n)*/)
-                        .split(/\n/)
-                        .map do |process|
-                          process.match(/Process (?<pid>\d):\s?(?<available>(\d )*)/)
-                                 .named_captures
-                        end
-                        .tap do |ps|
-                          ps.each do |p|
-                            p['pid'] = p['pid'].to_i
-                            p['available'] = p['available'].split(/\s+/)
-                                                           .map(&:to_i)
-                          end
-                        end
+    @allocation = scanner.scan(/(Process \d: \d( \d)*\n)*/)
+                         .split(/\n/)
+                         .map do |process|
+                           process.match(
+                             /Process (?<pid>\d):\s?(?<available>(\d )*)/
+                           ).named_captures
+                         end
+
+    @allocation.map! do |process|
+      {
+        pid: process['pid'].to_i,
+        available: process['available'].split(/\s+/).map(&:to_i)
+      }
+    end
   end
 end
