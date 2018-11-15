@@ -19,7 +19,7 @@ describe Parser do
             [4, 4, 3, 3, 1, 2, 3] ]
   end
 
-  let(:available) { [3, 3, 2, 1, 2, 3] }
+  let(:available) { Vector[3, 3, 2, 1, 2, 3] }
 
   let(:data) do
     { allocation: allocation, max: max, available: available }

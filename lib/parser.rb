@@ -32,7 +32,7 @@ class Parser
     # Parse the data
     @allocation = parse_process_list('Allocation', 'available').to_matrix
     @max        = parse_process_list('Max', 'maximum').to_matrix
-    @available  = parse_list 'Available'
+    @available  = Vector[*parse_list('Available')]
   end
 
   def data
