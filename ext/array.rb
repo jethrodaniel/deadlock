@@ -7,7 +7,7 @@ module ArrayMatrixHelper
       Matrix[*self]
     end
 
-    def less_than_all?(arr)
+    def lt_or_eq_all?(arr)
       flatten.zip(arr.flatten).all? { |pair| pair.first < pair.last }
     end
   end

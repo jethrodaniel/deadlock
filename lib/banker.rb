@@ -19,8 +19,9 @@ class Banker
     finish = [false] * need.row_size
 
     # finish.each_with_index do |e, i|
-    #  if finish[i] &&
-    #
+    #   if finish[i] == false && need.column[i].lt_or_eq_all? work
+
+    #   end
     # end
     true
   end

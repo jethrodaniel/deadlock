@@ -15,9 +15,9 @@ describe 'using ArrayMatrixHelper' do
       end
     end
 
-    describe '.less_than_all? b' do
+    describe '.lt_or_eq_all? b' do
       it 'whether each element is less than its corresponding element in arr' do
-        expect(a.less_than_all? b).to eq(true)
+        expect(a.lt_or_eq_all? b).to eq(true)
       end
     end
   end
