@@ -2,22 +2,24 @@
 
 ## Setup
 
-This code is written in Ruby. To install Ruby, use your OS's package manager.
+This code is written in [Ruby](https://www.ruby-lang.org/en/), a programming
+language that's pretty awesome. It should be installable via your OS's package
+manager, but [rvm](https://rvm.io/) is worth checking out if you really get
+into it.
 
-For example, for Ubuntu 18.04,
+For example, for Ubuntu 18.04:
 
 ```
 sudo apt update && sudo apt install ruby
 ```
 
-will install Ruby.
-
 ## Usage
 
-This code comes with a nice little command line interface.
+This code comes with a nice little command line interface provided by
+[thor](http://whatisthor.com/).
 
 ```
-$ ./bin/deadlock
+./bin/deadlock
 
 Commands:
   deadlock help [COMMAND]  # Describe available commands or one specific command
@@ -26,15 +28,16 @@ Commands:
 
 To run the program on the test data
 ```
-$ ./bin/deadlock parse spec/fixtures/sys_config.txt
+./bin/deadlock parse spec/fixtures/sys_config.txt
 
 TODO spec/fixtures/sys_config.txt
 ```
 
 ## Testing
 
-Tests are implemented using Rspec. To setup the tests, ensure you have Ruby
-installed, then install bundle to set up the Rubygem dependencies.
+Tests are implemented using [rspec](http://rspec.info/). To setup the tests,
+ensure you have a local version of Ruby, then install [bundle](https://bundler.io/)
+to set up development and test dependencies.
 
 ```
 gem install bundle && bundle install
