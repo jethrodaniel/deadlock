@@ -10,9 +10,14 @@
 # 3 3 2
 
 require 'strscan'
+require 'matrix'
+
+require_relative '../ext/array'
 
 # Parses input
 class Parser
+  using ArrayToMatrix
+
   attr_reader :input, :scanner, :allocation, :max, :available
 
   def initialize(input)
@@ -25,8 +30,8 @@ class Parser
     @scanner = StringScanner.new input
 
     # Parse the data
-    @allocation = parse_process_list('Allocation', 'available')
-    @max        = parse_process_list('Max', 'maximum')
+    @allocation = parse_process_list('Allocation', 'available').to_matrix
+    @max        = parse_process_list('Max', 'maximum').to_matrix
     @available  = parse_list 'Available'
   end
 
@@ -45,10 +50,10 @@ class Parser
   #
   # Where (x, y, a, b, c, ...) are integers
   #
-  # Returns an array of hashes like
+  # Returns an array of arrays like
   #  [
-  #    { :pid => x, :item => [a, b, c, ...] }
-  #    { :pid => y, :item => [a, b, c, ...] }
+  #    [x, a, b, c, ...],
+  #    [y, a, b, c, ...]
   #  ]
   #
   def parse_process_list(title, item)
@@ -56,19 +61,7 @@ class Parser
 
     @scanner.scan(/(Process \d: \d( \d)*\n)*/)
             .split(/\n/)
-            .map do |process|
-              process.match(
-                /Process (?<pid>\d):\s?(?<#{item}>\d( \d)*)/
-              ).named_captures
-            end
-            .tap do |hash|
-              hash.map! do |process|
-                {
-                  :pid => process['pid'].to_i,
-                  item.to_sym => process[item].split(/\s+/).map(&:to_i)
-                }
-              end
-            end
+            .map { |process| process.scan(/\d/).map(&:to_i) }
   end
 
   # Parses input like
