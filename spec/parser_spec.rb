@@ -25,35 +25,17 @@ describe Parser do
 
   let(:available) { [3, 3, 2, 1, 2, 3] }
 
-  describe '.parse!' do
-    it 'parses the input' do
-      expect(parser.allocation).to be_nil
-      expect(parser.max).to be_nil
-      parser.parse!
-      expect(parser.allocation).to_not be_nil
-      expect(parser.max).to_not be_nil
-    end
-
-    it 'returns the parsed input' do
-      data = parser.parse!
-      expect(data[:allocation]).to eq(allocation)
-      expect(data[:max]).to eq(max)
-      expect(data[:available]).to eq(available)
-    end
-
-    context 'parsing' do
+  describe '.new' do
+    context 'when parsing' do
       it 'correctly parses the allocation matrix' do
-        parser.parse!
         expect(parser.allocation).to eq(allocation)
       end
 
       it 'correctly parses the max matrix' do
-        parser.parse!
         expect(parser.max).to eq(max)
       end
 
       it 'correctly parses the available vector' do
-        parser.parse!
         expect(parser.available).to eq(available)
       end
     end # context 'parsing'

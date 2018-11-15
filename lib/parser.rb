@@ -23,16 +23,18 @@ class Parser
     @input = input.encode!(input.encoding, universal_newline: true)
 
     @scanner = StringScanner.new input
-  end
 
-  # Actually parse the input, and return the parsed data for convienience
-  def parse!
+    # Parse the data
     @allocation = parse_process_list('Allocation', 'available')
     @max        = parse_process_list('Max', 'maximum')
     @available  = parse_list 'Available'
+  end
 
+  def data
     { allocation: @allocation, max: @max, available: @available }
   end
+
+  private
 
   # Parses input like
   #
