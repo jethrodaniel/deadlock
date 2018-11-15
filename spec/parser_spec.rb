@@ -25,12 +25,6 @@ describe Parser do
 
   let(:available) { [3, 3, 2, 1, 2, 3] }
 
-  describe '.new' do
-    it 'creates a new Parser with input' do
-      expect(parser).to_not be_nil
-    end
-  end
-
   describe '.parse!' do
     it 'parses the input' do
       expect(parser.allocation).to be_nil
@@ -38,6 +32,13 @@ describe Parser do
       parser.parse!
       expect(parser.allocation).to_not be_nil
       expect(parser.max).to_not be_nil
+    end
+
+    it 'returns the parsed input' do
+      data = parser.parse!
+      expect(data[:allocation]).to eq(allocation)
+      expect(data[:max]).to eq(max)
+      expect(data[:available]).to eq(available)
     end
 
     context 'parsing' do

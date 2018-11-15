@@ -11,13 +11,11 @@
 
 require 'strscan'
 
-INPUT_FILE = 'sys_config.txt'.freeze
-
 # Parses input
 class Parser
   attr_reader :input, :scanner, :allocation, :max, :available
 
-  def initialize(input = INPUT_FILE)
+  def initialize(input)
     # Read the input file all at once
     input = File.open(input, 'r').read
 
@@ -27,22 +25,29 @@ class Parser
     @scanner = StringScanner.new input
   end
 
-  # Actually parse the input
+  # Actually parse the input, and return the parsed data for convienience
   def parse!
     @allocation = parse_process_list('Allocation', 'available')
     @max        = parse_process_list('Max', 'maximum')
-    @available  = parse_list('Available')
+    @available  = parse_list 'Available'
+
+    { allocation: @allocation, max: @max, available: @available }
   end
 
   # Parses input like
   #
   # title
-  # Process n: a b c ...
+  # Process x: a b c ...
+  # Process y: a b c ...
+  #   ...
   #
-  # Where (n, a, b, c, ...) are integers
+  # Where (x, y, a, b, c, ...) are integers
   #
-  # Returns a hash like
-  #  { :pid => n, :item => [a, b, c, ...] }
+  # Returns an array of hashes like
+  #  [
+  #    { :pid => x, :item => [a, b, c, ...] }
+  #    { :pid => y, :item => [a, b, c, ...] }
+  #  ]
   #
   def parse_process_list(title, item)
     @scanner.skip(/#{title}\n/)
