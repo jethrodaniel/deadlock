@@ -16,7 +16,7 @@ require_relative '../ext/array'
 
 # Parses input
 class Parser
-  using ArrayToMatrix
+  using ArrayMatrixHelper
 
   attr_reader :input, :scanner, :allocation, :max, :available
 
@@ -56,7 +56,7 @@ class Parser
   #    [y, a, b, c, ...]
   #  ]
   #
-  def parse_process_list(title, item)
+  def parse_process_list(title, _item)
     @scanner.skip(/#{title}\n/)
 
     @scanner.scan(/(Process \d: \d( \d)*\n)*/)
