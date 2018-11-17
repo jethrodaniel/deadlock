@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # An input file looks like
 #
 # Allocation

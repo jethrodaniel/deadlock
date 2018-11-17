@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../ext/matrix_helper'
 
 describe 'using MatrixHelper' do

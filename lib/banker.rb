@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'matrix'
 
 # Performs the Banker's algorithm on data
@@ -6,7 +8,13 @@ class Banker
 
   # Outputs if the system is SAFE or UNSAFE
   def self.run(allocation:, max:, available:)
-    puts safe? allocation, max, available
+    msg = if safe?(allocation: allocation, max: max, available: available)
+            'SAFE'
+          else
+            'UNSAFE'
+          end
+
+    puts msg
   end
 
   # Decides if the system is SAFE or UNSAFE

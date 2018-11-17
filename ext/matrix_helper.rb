@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Helper extensions
 module MatrixHelper
   require 'matrix'
