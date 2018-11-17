@@ -1,6 +1,6 @@
 Metrics/AbcSize:
-Exclude:
-  - 'lib/banker.rb'
+  Exclude:
+    - 'lib/banker.rb'
 
 Metrics/MethodLength:
   Exclude:
