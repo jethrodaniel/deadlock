@@ -1,15 +1,12 @@
+Metrics/AbcSize:
+Exclude:
+  - 'lib/banker.rb'
+
 Metrics/MethodLength:
   Exclude:
-    - "**/*.rb"
+    - 'lib/banker.rb'
 
 Metrics/BlockLength:
   Exclude:
-    - "**/*.rb"
+    - 'spec/**/*.rb'
 
-Style/CommentedKeyword:
-  Exclude:
-    - "**/*.rb"
-
-Style/MultilineBlockChain:
-  Exclude:
-    - "**/*.rb"

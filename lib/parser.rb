@@ -12,11 +12,11 @@
 require 'strscan'
 require 'matrix'
 
-require_relative '../ext/array'
+require_relative '../ext/matrix_helper'
 
 # Parses input
 class Parser
-  using ArrayMatrixHelper
+  using MatrixHelper
 
   attr_reader :input, :scanner, :allocation, :max, :available
 
@@ -52,8 +52,8 @@ class Parser
   #
   # Returns an array of arrays like
   #  [
-  #    [x, a, b, c, ...],
-  #    [y, a, b, c, ...]
+  #    [a, b, c, ...],
+  #    [a, b, c, ...]
   #  ]
   #
   def parse_process_list(title, _item)
@@ -61,7 +61,9 @@ class Parser
 
     @scanner.scan(/(Process \d: \d( \d)*\n)*/)
             .split(/\n/)
-            .map { |process| process.scan(/\d/).map(&:to_i) }
+            .map do |process|
+              process.scan(/\d/).map(&:to_i).drop(1)
+            end
   end
 
   # Parses input like
