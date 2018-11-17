@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'spec_helper'
 
 RSpec.describe 'CLI', type: :aruba do
@@ -7,7 +5,7 @@ RSpec.describe 'CLI', type: :aruba do
     let(:no_args_output) do
       <<~OUTPUT
         Commands:
-          deadlock [FILE]          # Parses input [FILE], then prints deadlock information
+          deadlock exec [FILE]     # Parses input [FILE], then prints deadlock information
           deadlock help [COMMAND]  # Describe available commands or one specific command
       OUTPUT
     end
@@ -29,26 +27,82 @@ RSpec.describe 'CLI', type: :aruba do
     end
   end
 
-  context 'running input' do
-    context 'when input has a safe path' do
-      before(:each) do
-        copy '%/sys_config.txt', 'sys_config.txt'
-        run 'bin/deadlock sys_config.txt'
+  describe 'running input' do
+
+    let(:safe_output) do
+      <<~OUTPUT
+      SAFE
+      Request Vector:
+      OUTPUT
+    end
+
+    let(:unsafe_output) { safe_output.gsub 'SAFE', 'UNSAFE' }
+
+    before(:each) do
+      copy '%/unsafe.txt', 'unsafe.txt'
+      copy '%/sys_config.txt', 'sys_config.txt'
+    end
+
+    describe 'when deciding if a system is safe' do
+
+      context 'if input has a safe path' do
+        before(:each) do
+          run 'bin/deadlock exec sys_config.txt', exit_timeout: 0.5
+        end
+
+        it 'outputs `SAFE`' do
+          expect(last_command_started).to have_output \
+                                          match_output_string 'SAFE.*'
+        end
       end
 
-      it 'outputs `SAFE`' do
-        expect(last_command_started).to have_output 'SAFE'
+      context 'if input does not have a safe path' do
+        before(:each) do
+          run 'bin/deadlock exec unsafe.txt', exit_timeout: 0.5
+        end
+
+        it 'outputs `UNSAFE`' do
+          expect(last_command_started).to have_output \
+                                          match_output_string 'UNSAFE.*'
+        end
       end
     end
 
-    context 'when input does not have a safe path' do
-      before(:each) do
-        copy '%/unsafe.txt', 'unsafe.txt'
-        run 'bin/deadlock unsafe.txt'
+    describe 'when inputing a request vector' do
+      context 'if input is valid' do
+        before(:each) do
+          run 'bin/deadlock exec sys_config.txt', interactive: true,
+                                                  exit_timeout: 0.5
+        end
+
+        context 'if the request can be granted' do
+          it 'outputs `GRANTED`' do
+            type '1 0 2'
+            expect(last_command_started).to have_output \
+                                            include_output_string 'GRANTED'
+          end
+        end
+
+        context 'if the request can not be granted' do
+          it 'outputs `NOT GRANTED`' do
+            type '9 9 9'
+            expect(last_command_started).to have_output \
+                                            include_output_string 'NOT GRANTED'
+          end
+        end
       end
 
-      it 'outputs `UNSAFE`' do
-        expect(last_command_started).to have_output 'UNSAFE'
+      context 'if input is invalid' do
+        before(:each) do
+          run 'bin/deadlock exec unsafe.txt', interactive: true,
+                                              exit_timeout: 0.5
+          type 'garbage'
+        end
+
+        it 'outputs `Wrong input!`' do
+          expect(last_command_started).to have_output \
+                                          include_output_string 'Wrong input!'
+        end
       end
     end
   end

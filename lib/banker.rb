@@ -5,16 +5,41 @@ require 'matrix'
 # Performs the Banker's algorithm on data
 class Banker
   using MatrixHelper
+  attr_reader :allocation, :max, :available
 
-  # Outputs if the system is SAFE or UNSAFE
-  def self.run(allocation:, max:, available:)
-    msg = if safe?(allocation: allocation, max: max, available: available)
-            'SAFE'
-          else
-            'UNSAFE'
-          end
+  def initialize(allocation:, max:, available:)
+    @allocation = allocation
+    @max = max
+    @available = available
+  end
 
-    puts msg
+  # Decides if the system can grant a request, if so, grants the request
+  #
+  # 1. Check if request <= available
+  #
+  #   i. If so, pretend the request was granted, then check whether or not
+  #      the resulting system would be safe - if it is, then grant the request
+  #      and return true, else false
+  #
+  #  ii. If not, the request can't be immediately granted
+  def grant? request
+    return false unless request.lt_or_eq_all? @available
+
+    available = @available - request
+
+    # Check each process to see if the request can be granted to it
+    1.upto(allocation.column_size).each do |i|
+      begin
+        allocation.set_row(i, @allocation.row_vectors[i] + request)
+        need = @need.nil? ? @max - @allocation : @need
+        need.set_row(i, need.row_vectors[i] - request)
+        break
+      rescue ExceptionForMatrix::ErrDimensionMismatch => e
+        throw ArgumentError, 'matrix dimension error'
+      end
+    end
+
+    safe? allocation, max, available
   end
 
   # Decides if the system is SAFE or UNSAFE
@@ -33,7 +58,7 @@ class Banker
   #    Go to step 2
   #
   # 4. if finish[i] istrue for all i, then safe
-  def self.safe?(allocation:, max:, available:)
+  def safe?(allocation = @allocation, max = @max, available = @available)
     need   = max - allocation
     work   = available
     finish = [false] * need.row_size

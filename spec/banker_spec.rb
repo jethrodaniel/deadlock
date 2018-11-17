@@ -14,13 +14,35 @@ describe Banker do
 
   let(:unsafe_example) { Parser.new('spec/fixtures/unsafe.txt').data }
 
-  describe '#safe?' do
+  describe '.new' do
+    let(:banker) { Banker.new(**safe_examples.first) }
+
+    it 'initializes a system' do
+      expect(banker).to_not be_nil
+      expect(banker.allocation).to_not be_nil
+      expect(banker.max).to_not be_nil
+      expect(banker.available).to_not be_nil
+    end
+  end
+
+  describe '.grant?' do
+    let(:banker) { Banker.new(**safe_examples.first) }
+    let(:grantable_request) { Vector[1, 0, 2] }
+    let(:ungrantable_request) { Vector[9, 9, 9] }
+
+    it 'checks whether a request can be granted' do
+      expect(banker.grant? grantable_request).to be true
+      expect(banker.grant? ungrantable_request).to be false
+    end
+  end
+
+  describe '.safe?' do
     it 'checks whether a system is in a safe state' do
       safe_examples.each do |example|
-        expect(Banker.safe?(**example)).to eq(true)
+        expect(Banker.new(**example).safe?).to eq(true)
       end
 
-      expect(Banker.safe?(**unsafe_example)).to eq(false)
+      expect(Banker.new(**unsafe_example).safe?).to eq(false)
     end
   end
 end

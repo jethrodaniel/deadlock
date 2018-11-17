@@ -3,13 +3,4 @@
 
 require_relative '../lib/cli'
 
-case ARGV.size
-when 1
-  if ARGV.first == '' || ARGV.first !~ /(.*help)|(.*-h)/
-    CLI.new.execute(ARGV.first)
-  else
-    CLI.new.help
-  end
-else
-  CLI.new.help
-end
+CLI.start(ARGV)

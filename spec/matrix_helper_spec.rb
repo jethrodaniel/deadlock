@@ -15,6 +15,18 @@ describe 'using MatrixHelper' do
     end
   end
 
+  describe Matrix do
+    describe '.set_row' do
+      let(:matrix) { Matrix[ [1, 2], [3, 4] ] }
+      let(:vector) { Vector[9, 9] }
+
+      it 'sets the specified row to the vector' do
+        matrix.set_row 0, vector
+        expect(matrix.row_vectors.first).to eq(vector)
+      end
+    end
+  end
+
   describe Vector do
     describe '.lt_or_eq_all?' do
       let(:a) { Vector[1, 2] }
