@@ -40,5 +40,16 @@ RSpec.describe 'CLI', type: :aruba do
         expect(last_command_started).to have_output 'SAFE'
       end
     end
+
+    context 'when input does not have a safe path' do
+      before(:each) do
+        copy '%/unsafe.txt', 'unsafe.txt'
+        run 'bin/deadlock unsafe.txt'
+      end
+
+      it 'outputs `UNSAFE`' do
+        expect(last_command_started).to have_output 'UNSAFE'
+      end
+    end
   end
 end

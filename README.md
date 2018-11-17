@@ -22,15 +22,20 @@ This code comes with a nice little command line interface provided by
 ./bin/deadlock
 
 Commands:
+  deadlock [FILE]          # Parses input [FILE], then prints deadlock information
   deadlock help [COMMAND]  # Describe available commands or one specific command
-  deadlock parse [FILE]    # Parses input [FILE], then prints deadlock information
 ```
 
 To run the program on the test data
 ```
-./bin/deadlock parse spec/fixtures/sys_config.txt
+./bin/deadlock spec/fixtures/sys_config.txt
 
-TODO spec/fixtures/sys_config.txt
+SAFE
+```
+```
+./bin/deadlock spec/fixtures/unsafe.txt
+
+UNSAFE
 ```
 
 ## Testing

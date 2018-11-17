@@ -4,7 +4,7 @@ require 'parser'
 require 'banker'
 
 describe Banker do
-  let(:examples) do
+  let(:safe_examples) do
     [
       Parser.new('spec/fixtures/sys_config.txt').data,
       Parser.new('spec/fixtures/wikipedia_example.txt').data,
@@ -12,11 +12,15 @@ describe Banker do
     ]
   end
 
+  let(:unsafe_example) { Parser.new('spec/fixtures/unsafe.txt').data }
+
   describe '#safe?' do
     it 'checks whether a system is in a safe state' do
-      examples.each do |example|
+      safe_examples.each do |example|
         expect(Banker.safe?(**example)).to eq(true)
       end
+
+      expect(Banker.safe?(**unsafe_example)).to eq(false)
     end
   end
 end
