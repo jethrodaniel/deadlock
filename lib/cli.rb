@@ -5,20 +5,21 @@ require 'thor'
 require_relative 'parser'
 require_relative 'banker'
 
+# Handle interrupts to exit gracefully
+module CleanExit
+  trap('INT') do
+    Thor::Shell::Basic.new.say "\nExiting...", :cyan
+    exit
+  end
+end
+
 # The main command line interface
 class CLI < Thor
+  include CleanExit
 
   # The command to run an input file
- desc 'exec [FILE]', 'Parses input [FILE], then prints deadlock information'
+  desc 'exec [FILE]', 'Parses input [FILE], then prints deadlock information'
   def exec(file)
-    # Handle interrupts to exit gracefully
-    %w(INT).each do |signal|
-      trap(signal) do
-        say "\nExiting...", :cyan
-        exit
-      end
-    end
-
     data = Parser.new(file).data
     banker = Banker.new(**data)
 
@@ -34,12 +35,12 @@ class CLI < Thor
     loop do
       input = ask 'Request Vector:', :yellow
 
-      unless input.match? /\d( \d){#{banker.allocation.column_count - 1}}/
+      unless input.match?(/\d( \d){#{banker.allocation.column_count - 1}}\z/)
         say 'Wrong input!', :red
         next
       end
 
-      if banker.grant? Vector[*(input.split.map(&:to_i))]
+      if banker.grant? Vector[*input.split.map(&:to_i)]
         say 'GRANTED', :green, :bold
       else
         say 'NOT GRANTED', :red, :bold

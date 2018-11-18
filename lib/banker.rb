@@ -13,33 +13,49 @@ class Banker
     @available = available
   end
 
-  # Decides if the system can grant a request, if so, grants the request
+  # Decides if the system can grant a request to any of its processes
+  def grant?(request)
+    (0..@allocation.column_count).any? do |i|
+      _grant? request: request, process: i
+    end
+  end
+
+  # Decides if the system can grant a request to a process
   #
-  # 1. Check if request <= available
+  # 1. Check if request_i <= need_i, move to step #2 or return false if not
   #
-  #   i. If so, pretend the request was granted, then check whether or not
-  #      the resulting system would be safe - if it is, then grant the request
-  #      and return true, else false
+  # 2. Check if request_i <= available, move to step #3 or return false if not
   #
-  #  ii. If not, the request can't be immediately granted
-  def grant? request
+  # 3. Pretend the request was granted, then return whether or not the
+  #    resulting system would be safe
+  #
+  # @param  request  a request vector
+  # @param  process  the index of the process which is requesting resources
+  def _grant?(request:, process:)
+    allocation = @allocation.clone
+    available  = @available.clone
+    need       = @max - @allocation
+
+    # process has exceeded its maximum claim
+    return false unless request.lt_or_eq_all? need.row_vectors[process]
+
+    # process must wait, since resources are unavailable
     return false unless request.lt_or_eq_all? @available
 
-    available = @available - request
+    # simulate granting the request
+    available -= request
+    allocation.set_row(process, allocation.row_vectors[process] + request)
+    need.set_row(process, need.row_vectors[process] - request)
 
-    # Check each process to see if the request can be granted to it
-    1.upto(allocation.column_size).each do |i|
-      begin
-        allocation.set_row(i, @allocation.row_vectors[i] + request)
-        need = @need.nil? ? @max - @allocation : @need
-        need.set_row(i, need.row_vectors[i] - request)
-        break
-      rescue ExceptionForMatrix::ErrDimensionMismatch => e
-        throw ArgumentError, 'matrix dimension error'
-      end
-    end
+    # whether granting the request would result in a safe state
+    _safe? allocation: allocation,
+           max: @max,
+           available: available,
+           need: need
+  end
 
-    safe? allocation, max, available
+  def safe?
+    _safe? allocation: @allocation, max: @max, available: @available
   end
 
   # Decides if the system is SAFE or UNSAFE
@@ -58,8 +74,8 @@ class Banker
   #    Go to step 2
   #
   # 4. if finish[i] istrue for all i, then safe
-  def safe?(allocation = @allocation, max = @max, available = @available)
-    need   = max - allocation
+  def _safe?(allocation:, max:, available:, need: nil)
+    need ||= max - allocation
     work   = available
     finish = [false] * need.row_size
 

@@ -11,13 +11,14 @@ module MatrixHelper
   end
 
   refine Matrix do
-    def set_row(n, vector)
-       rows[n] = vector
+    def set_row(index, vector)
+      rows[index] = vector
     end
   end
 
   refine Vector do
     def lt_or_eq_all?(vector)
+      throw ExceptionForMatrix::ErrDimensionMismatch unless size == vector.size
       zip(vector).all? { |pair| pair.first <= pair.last }
     end
   end

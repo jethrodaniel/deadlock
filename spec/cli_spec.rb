@@ -28,11 +28,10 @@ RSpec.describe 'CLI', type: :aruba do
   end
 
   describe 'running input' do
-
     let(:safe_output) do
       <<~OUTPUT
-      SAFE
-      Request Vector:
+        SAFE
+        Request Vector:
       OUTPUT
     end
 
@@ -44,7 +43,6 @@ RSpec.describe 'CLI', type: :aruba do
     end
 
     describe 'when deciding if a system is safe' do
-
       context 'if input has a safe path' do
         before(:each) do
           run 'bin/deadlock exec sys_config.txt', exit_timeout: 0.5
@@ -52,7 +50,7 @@ RSpec.describe 'CLI', type: :aruba do
 
         it 'outputs `SAFE`' do
           expect(last_command_started).to have_output \
-                                          match_output_string 'SAFE.*'
+            match_output_string 'SAFE.*'
         end
       end
 
@@ -63,7 +61,7 @@ RSpec.describe 'CLI', type: :aruba do
 
         it 'outputs `UNSAFE`' do
           expect(last_command_started).to have_output \
-                                          match_output_string 'UNSAFE.*'
+            match_output_string 'UNSAFE.*'
         end
       end
     end
@@ -79,7 +77,7 @@ RSpec.describe 'CLI', type: :aruba do
           it 'outputs `GRANTED`' do
             type '1 0 2'
             expect(last_command_started).to have_output \
-                                            include_output_string 'GRANTED'
+              include_output_string 'GRANTED'
           end
         end
 
@@ -87,7 +85,7 @@ RSpec.describe 'CLI', type: :aruba do
           it 'outputs `NOT GRANTED`' do
             type '9 9 9'
             expect(last_command_started).to have_output \
-                                            include_output_string 'NOT GRANTED'
+              include_output_string 'NOT GRANTED'
           end
         end
       end
@@ -101,7 +99,7 @@ RSpec.describe 'CLI', type: :aruba do
 
         it 'outputs `Wrong input!`' do
           expect(last_command_started).to have_output \
-                                          include_output_string 'Wrong input!'
+            include_output_string 'Wrong input!'
         end
       end
     end

@@ -1,12 +1,18 @@
 Metrics/AbcSize:
   Exclude:
     - 'lib/banker.rb'
+    - 'lib/cli.rb'
 
 Metrics/MethodLength:
   Exclude:
     - 'lib/banker.rb'
+    - 'lib/cli.rb'
 
 Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Style/FrozenStringLiteralComment:
   Exclude:
     - 'spec/**/*.rb'
 

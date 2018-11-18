@@ -31,8 +31,8 @@ describe Banker do
     let(:ungrantable_request) { Vector[9, 9, 9] }
 
     it 'checks whether a request can be granted' do
-      expect(banker.grant? grantable_request).to be true
-      expect(banker.grant? ungrantable_request).to be false
+      expect(banker.grant?(grantable_request)).to be true
+      expect(banker.grant?(ungrantable_request)).to be false
     end
   end
 

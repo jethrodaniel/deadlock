@@ -17,7 +17,7 @@ describe 'using MatrixHelper' do
 
   describe Matrix do
     describe '.set_row' do
-      let(:matrix) { Matrix[ [1, 2], [3, 4] ] }
+      let(:matrix) { Matrix[[1, 2], [3, 4]] }
       let(:vector) { Vector[9, 9] }
 
       it 'sets the specified row to the vector' do
