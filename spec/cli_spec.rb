@@ -79,7 +79,7 @@ RSpec.describe 'CLI', type: :aruba do
             expect(last_command_started).to have_output \
               include_output_string 'GRANTED'
           end
-        end
+       end
 
         context 'if the request can not be granted' do
           it 'outputs `NOT GRANTED`' do
@@ -100,6 +100,37 @@ RSpec.describe 'CLI', type: :aruba do
         it 'outputs `Wrong input!`' do
           expect(last_command_started).to have_output \
             include_output_string 'Wrong input!'
+        end
+      end
+
+      context 'inputing additional request vectors' do
+        before(:each) do
+          run 'bin/deadlock exec sys_config.txt', interactive: true,
+                                                  exit_timeout: 0.5
+        end
+
+        let(:multiple_inputs) do
+          <<~OUTPUT
+            SAFE
+            Request Vector: 1 0 2
+            GRANTED
+            Request Vector: 1 0 2
+            GRANTED
+            Request Vector: 9 9 9
+            NOT GRANTED
+            Request Vector: 1 0 21
+            Wrong input!
+            Request Vector:
+          OUTPUT
+        end
+
+        it 'continually asks for more request vectors' do
+          type '1 0 2'
+          type '1 0 2'
+          type '9 9 9'
+          type '1 0 21'
+          expect(last_command_started).to have_output \
+            include_output_string multiple_inputs
         end
       end
     end
