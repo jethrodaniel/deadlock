@@ -20,7 +20,7 @@ class CLI < Thor
   include CleanExit
 
   # The command to run an input file
-  desc 'exec [FILE]', 'Parses input [FILE], then prints deadlock information'
+  desc 'exec [FILE]', 'Parses input [FILE], then prints deadlock info'
   def exec(file)
     data = Parser.new(file).data
     banker = Banker.new(**data)

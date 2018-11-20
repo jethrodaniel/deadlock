@@ -5,7 +5,7 @@ RSpec.describe 'CLI', type: :aruba do
     let(:no_args_output) do
       <<~OUTPUT
         Commands:
-          deadlock exec [FILE]     # Parses input [FILE], then prints deadlock information
+          deadlock exec [FILE]     # Parses input [FILE], then prints deadlock info
           deadlock help [COMMAND]  # Describe available commands or one specific command
       OUTPUT
     end

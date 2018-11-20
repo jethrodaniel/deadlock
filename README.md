@@ -4,13 +4,21 @@
 
 This code is written in [Ruby](https://www.ruby-lang.org/en/), a programming
 language that's pretty awesome. It should be installable via your OS's package
-manager, but [rvm](https://rvm.io/) is worth checking out if you really get
-into it.
+manager, but [rvm](https://rvm.io/) is a more reliable solution.
 
-For example, for Ubuntu 18.04:
+To install ruby with rvm (from [here](https://rvm.io/rvm/install)):
 
 ```
-sudo apt update && sudo apt install ruby
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+\curl -sSL https://get.rvm.io | bash -s stable --ruby
+source "$HOME/.rvm/scripts/rvm"
+```
+
+You also need so download the dependencies, which are managed by bundler.
+
+```
+gem install bundle
+bundle install
 ```
 
 ## Usage
@@ -22,16 +30,25 @@ This code comes with a nice little command line interface provided by
 ./bin/deadlock
 
 Commands:
-  deadlock [FILE]          # Parses input [FILE], then prints deadlock information
+  deadlock exec [FILE]     # Parses input [FILE], then prints deadlock information
   deadlock help [COMMAND]  # Describe available commands or one specific command
 ```
 
 To run the program on the test data
 ```
-./bin/deadlock spec/fixtures/sys_config.txt
+./bin/deadlock exec spec/fixtures/sys_config.txt
 
 SAFE
+Request Vector: 1 0 2
+GRANTED
+Request Vector: 1 0 2 3
+Wrong input!
+Request Vector: 12 2 2
+Wrong input!
+Request Vector:
+Exiting...
 ```
+
 ```
 ./bin/deadlock spec/fixtures/unsafe.txt
 
@@ -40,15 +57,9 @@ UNSAFE
 
 ## Testing
 
-Tests are implemented using [rspec](http://rspec.info/). To setup the tests,
-ensure you have a local version of Ruby, then install [bundle](https://bundler.io/)
-to set up development and test dependencies.
+Tests are implemented using [rspec](http://rspec.info/).
 
-```
-gem install bundle && bundle install
-```
-
-After that, you can run the tests by using
+Run the tests by calling
 
 ```
 rspec
