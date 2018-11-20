@@ -7,9 +7,11 @@ require_relative 'banker'
 
 # Handle interrupts to exit gracefully
 module CleanExit
-  trap('INT') do
-    Thor::Shell::Basic.new.say "\nExiting...", :cyan
-    exit
+  %w[SIGINT INT].each do |signal|
+    trap(signal) do
+      Thor::Shell::Basic.new.say "\nExiting...", :cyan
+      exit
+    end
   end
 end
 
@@ -35,7 +37,7 @@ class CLI < Thor
     loop do
       input = ask 'Request Vector:', :yellow
 
-      unless input.match?(/\d( \d){#{banker.allocation.column_count - 1}}\z/)
+      unless input.match?(/\A\d( \d){#{banker.allocation.column_count - 1}}\z/)
         say 'Wrong input!', :red
         next
       end

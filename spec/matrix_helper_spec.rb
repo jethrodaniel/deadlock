@@ -27,7 +27,7 @@ describe 'using MatrixHelper' do
 
       it 'raises an exception if the index is out of bounds' do
         expect do
-          matrix.set_row -1, vector
+          matrix.set_row(-1, vector)
           matrix.set_row matrix.row_count + 1, vector
         end.to raise_error(ExceptionForMatrix::ErrDimensionMismatch)
       end

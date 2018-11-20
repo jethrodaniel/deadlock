@@ -12,7 +12,7 @@ module MatrixHelper
 
   refine Matrix do
     def set_row(index, vector)
-      unless (0..row_size).cover?(index) && vector.size == column_size
+      unless (0..row_size).cover?(index) && vector.size == rows[0]&.size
         raise ExceptionForMatrix::ErrDimensionMismatch
       end
 
@@ -23,6 +23,7 @@ module MatrixHelper
   refine Vector do
     def lt_or_eq_all?(vector)
       raise ExceptionForMatrix::ErrDimensionMismatch unless size == vector.size
+
       zip(vector).all? { |pair| pair.first <= pair.last }
     end
   end

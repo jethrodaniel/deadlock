@@ -79,7 +79,7 @@ RSpec.describe 'CLI', type: :aruba do
             expect(last_command_started).to have_output \
               include_output_string 'GRANTED'
           end
-       end
+        end
 
         context 'if the request can not be granted' do
           it 'outputs `NOT GRANTED`' do
