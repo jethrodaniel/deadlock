@@ -30,6 +30,7 @@ class CLI < Thor
       say 'SAFE', :green, :bold
     else
       say 'UNSAFE', :red, :bold
+      exit
     end
 
     # Continually ask for a request vector, granting the request

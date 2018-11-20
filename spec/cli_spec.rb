@@ -40,6 +40,7 @@ RSpec.describe 'CLI', type: :aruba do
     before(:each) do
       copy '%/unsafe.txt', 'unsafe.txt'
       copy '%/sys_config.txt', 'sys_config.txt'
+      copy '%/wikipedia_example.txt', 'wikipedia_example.txt'
     end
 
     describe 'when deciding if a system is safe' do
@@ -92,8 +93,8 @@ RSpec.describe 'CLI', type: :aruba do
 
       context 'if input is invalid' do
         before(:each) do
-          run 'bin/deadlock exec unsafe.txt', interactive: true,
-                                              exit_timeout: 0.5
+          run 'bin/deadlock exec wikipedia_example.txt', interactive: true,
+                                                         exit_timeout: 0.5
           type 'garbage'
         end
 
